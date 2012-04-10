@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'4/8/2012'</value>
+      <value>'4/10/2012'</value>
     </define>
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
@@ -33,7 +33,7 @@
   <file-specs>
     <path-element>C:\Users\Matthew\Documents\All Flash\All Flash Projects\Skirmish Rain\src\Main.as</path-element>
   </file-specs>
-  <default-background-color>#0080C0</default-background-color>
+  <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>30</default-frame-rate>
   <default-size>
     <width>650</width>
