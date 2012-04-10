@@ -4,6 +4,7 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	import hud.Display;
 	import units.Hero;
 	import units.ISelectable;
 	
@@ -17,18 +18,21 @@ package
 		private var _selectionOverlay:Sprite = new Sprite();
 		private var _mouseDown:Boolean = false;*/
 		
-		private var _world:World = new World();
+		public static var world:World = new World();
+		public static var display:Display = new Display();
 		private var _hero:Hero = new Hero();
 		public static var selectableUnits:Vector.<ISelectable> = new Vector.<ISelectable>();
 		
 		public function PlayState() 
 		{
-			addChild(_world);
-			_world.y = 480;
-			_world.x = _world.width / 2;
+			addChild(world);
+			world.y = 480;
+			world.x = world.width / 2;
+			
+			addChild(display);
 			
 			
-			_world.addChild(_hero);
+			world.addChild(_hero);
 			selectableUnits.push(_hero);
 			
 			/*addChild(_selectionOverlay);*/
