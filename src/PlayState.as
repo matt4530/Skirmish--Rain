@@ -6,7 +6,7 @@ package
 	import flash.geom.Rectangle;
 	import hud.Display;
 	import units.Hero;
-	import units.ISelectable;
+	import units.Minion;
 	
 	/**
 	 * ...
@@ -14,14 +14,11 @@ package
 	 */
 	public class PlayState extends Sprite 
 	{
-		/*private var _selectionRectangle:Rectangle = new Rectangle();
-		private var _selectionOverlay:Sprite = new Sprite();
-		private var _mouseDown:Boolean = false;*/
-		
 		public static var world:World = new World();
 		public static var display:Display = new Display();
-		private var _hero:Hero = new Hero();
-		public static var selectableUnits:Vector.<ISelectable> = new Vector.<ISelectable>();
+		private var _hero:Hero = new Hero(true);
+		private var _enemyHero:Hero = new Hero(true);
+		public static var minionList:Vector.<Minion> = new Vector.<Minion>();
 		
 		public function PlayState() 
 		{
@@ -31,46 +28,113 @@ package
 			
 			addChild(display);
 			
-			
 			world.addChild(_hero);
-			selectableUnits.push(_hero);
+			_hero.x = -world.width / 2 + 200;
+			_hero.y = -20;
 			
-			/*addChild(_selectionOverlay);*/
+			world.addChild(_enemyHero)
+			_enemyHero.x = -_hero.x;
+			_enemyHero.y = _hero.y;
 			
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		private function init(e:Event):void
 		{
-			/*stage.addEventListener(MouseEvent.MOUSE_DOWN, mDown);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, mUp);
-			stage.addEventListener(Event.ENTER_FRAME, frame);*/
+			stage.addEventListener(Event.ENTER_FRAME, frame);
+			stage.addEventListener(MouseEvent.CLICK, moveSelectedUnit, false, 999);
+			display.addEventListener(MouseEvent.CLICK, moveSelectedUnit, false, 999);
+		}
+		
+		private function moveSelectedUnit(e:MouseEvent):void 
+		{
+			trace(e.currentTarget, "clicked");
+			if (e.currentTarget is Display)
+			{
+				_hero.isSelected = false;
+			}
+			if (_hero.isSelected)
+			{
+				_hero.targetX = world.mouseX;
+			}
+			
 		}
 		
 		private function frame(e:Event):void 
 		{
-			/*_selectionOverlay.graphics.clear();
-			if (_mouseDown)
+			_hero.move();
+			world.castleAlly.frame();
+			world.castleEnemy.frame();
+			
+			var i:int = 0;
+			for (i = 0; i < minionList.length; i++)
 			{
-				_selectionRectangle.width = stage.mouseX - _selectionRectangle.x;
-				_selectionRectangle.height = stage.mouseY - _selectionRectangle.y;
-				_selectionOverlay.graphics.lineStyle(1, 0xFFFFFF);
-				_selectionOverlay.graphics.beginFill(0xFFFFFF, 0.4);
-				_selectionOverlay.graphics.drawRect(_selectionRectangle.x, _selectionRectangle.y, _selectionRectangle.width, _selectionRectangle.height);
-				_selectionOverlay.graphics.endFill();
-			}*/
+				minionList[i].frame();
+				var hasAttacked:Boolean = false;
+				inminion: for (var q:int = 0; q < minionList.length; q++)
+				{
+					if (minionList[q].isAlly != minionList[i].isAlly && minionList[q].hitTestObject(minionList[i]))
+					{
+						minionList[i].attack(minionList[q]);
+						hasAttacked = true;
+						if (minionList[q].health <= 0)
+						{
+							minionList[q].parent.removeChild(minionList[q]);
+							minionList[q] = minionList[minionList.length -1];
+							minionList.length--;
+						}
+						break inminion;
+					}
+				}
+				
+				if (!hasAttacked)
+				{
+					if (!minionList[i].isAlly)
+					{
+						//touches hero
+						if(minionList[i].hitTestObject(_hero))
+						{
+							minionList[i].attackHero(_hero);
+							hasAttacked = true;
+							if (_hero.health <= 0)
+							{
+								//hero is dead
+							}
+						}
+						//touches castle
+						else if (minionList[i].hitTestObject(world.castleAlly))
+						{
+							minionList[i].attackCastle(world.castleAlly);
+							if (world.castleAlly.health <= 0)
+							{
+								//castle is dead
+							}
+						}
+					}
+					else if (minionList[i].isAlly)
+					{
+						//touches enemyhero
+						if(minionList[i].hitTestObject(_enemyHero))
+						{
+							minionList[i].attackHero(_enemyHero);
+							hasAttacked = true;
+							if (_enemyHero.health <= 0)
+							{
+								//enemyhero is dead
+							}
+						}
+						//touches enemy castle
+						else if (minionList[i].hitTestObject(world.castleEnemy))
+						{
+							minionList[i].attackCastle(world.castleEnemy);
+							if (world.castleEnemy.health <= 0)
+							{
+								//castle is dead
+							}
+						}
+					}
+				}
+			}
 		}
-		
-		/*private function mUp(e:MouseEvent):void 
-		{
-			_mouseDown = false;
-		}*/
-		
-		/*private function mDown(e:MouseEvent):void 
-		{
-			_mouseDown = true;
-			_selectionRectangle.x = stage.mouseX;
-			_selectionRectangle.y = stage.mouseY;
-		}*/
 		
 	}
 
