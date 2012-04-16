@@ -32,22 +32,22 @@ package hud
 		private function frame(e:Event):void 
 		{
 			overCount++;
-			scrollSpeed = overCount/30 + 2
+			scrollSpeed = overCount/15 + 6
 			if (currentOver == scrollTriggerLeft)
 			{
 				PlayState.world.x += scrollSpeed;
-				if (PlayState.world.x > PlayState.world.width / 2)
+				if (PlayState.world.x > 1500)
 				{
-					PlayState.world.x = PlayState.world.width / 2;
+					PlayState.world.x = 1500;
 				}
 				
 			}
 			else if (currentOver == scrollTriggerRight)
 			{
 				PlayState.world.x -= scrollSpeed;
-				if (PlayState.world.x < -PlayState.world.width / 2 + 650)
+				if (PlayState.world.x < -1500 + 650)
 				{
-					PlayState.world.x = -PlayState.world.width / 2 + 650;
+					PlayState.world.x = -1500 + 650;
 				}
 			}
 		}

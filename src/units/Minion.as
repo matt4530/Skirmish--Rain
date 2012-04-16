@@ -21,7 +21,7 @@ package units
 			if (!isAlly)
 			{
 				filters = [new GlowFilter()];
-				
+				scaleX = -1;
 			}
 			ID = int(Math.random() * 999);
 		}
@@ -53,7 +53,7 @@ package units
 			if (attackCoolDown == attackCoolDownMax)
 			{
 				o.health -= 5;
-				trace(ID, "attacked for 5 points");
+				//trace(ID, "attacked for 5 points");
 			}
 			action = "attack";
 		}
@@ -62,7 +62,7 @@ package units
 			if (attackCoolDown == attackCoolDownMax)
 			{
 				o.health -= 5;
-				trace(ID, "attacked for 5 points");
+				//trace(ID, "attacked for 5 points");
 			}
 			action = "attack";
 		}
@@ -71,7 +71,7 @@ package units
 			if (attackCoolDown == attackCoolDownMax)
 			{
 				o.health -= 5;
-				trace(ID, "attacked for 5 points");
+				//trace(ID, "attacked for 5 points");
 			}
 			action = "attack";
 		}
